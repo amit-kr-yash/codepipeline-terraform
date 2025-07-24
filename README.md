@@ -9,7 +9,7 @@ The provisioned infrastructure follows a modern, event-driven CI/CD pattern.
 ***Note:** The following diagram is written in Mermaid syntax. It will render as a visual flowchart in most modern Markdown viewers, such as on GitHub.*
 
 ```mermaid
-gflowchart TD
+flowchart TD
   %% Direction top to bottom
   direction TB
 
