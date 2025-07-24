@@ -8,39 +8,33 @@ The provisioned infrastructure follows a modern, event-driven CI/CD pattern.
 
 ***Note:** The following diagram is written in Mermaid syntax. It will render as a visual flowchart in most modern Markdown viewers, such as on GitHub.*
 
-graph TD
-    subgraph "Developer"
-        A[git push] --> B{GitHub Repository};
-    end
+```mermaid
+gflowchart TD
+  %% Direction top to bottom
+  direction TB
 
-    subgraph "AWS CI/CD Pipeline"
-        B -- Webhook --> C(CodeStar Connection);
-        C --> D[AWS CodePipeline];
-        D -- Fetches Source --> E(S3 Artifact Bucket);
-        D -- Triggers Build --> F[AWS CodeBuild];
-        F -- Reads Source --> E;
-        F -- Writes Artifacts --> E;
-        D -- Triggers Deploy --> G[AWS CodeDeploy];
-        G -- Reads Artifacts --> E;
-    end
+  %% Developer
+  subgraph DEV["👨‍💻 Developer"]
+    A1["💻 Push Code to GitHub"]
+  end
 
-    subgraph "AWS Application Infrastructure"
-        H[Application Load Balancer] --> I{Target Group};
-        J[Auto Scaling Group] --> K1(EC2 Instance 1);
-        J --> K2(EC2 Instance 2);
-        I --> K1;
-        I --> K2;
-        G -- Deploys to --> J;
-    end
+  %% AWS Infra
+  subgraph AWS["☁️ AWS Infrastructure via Terraform"]
+    C1["📦 S3 Bucket\n(Artifact Storage)"]
+    C2["🏗️ CodeBuild\n(Build & Test)"]
+    C3["🚀 CodeDeploy\n(EC2 Deployment)"]
+    C4["🔁 CodePipeline\n(CI/CD Orchestrator)"]
+    C5["🔐 IAM Roles & Policies"]
+  end
 
-    subgraph "User"
-        L[Web Traffic] --> H;
-    end
+  %% Flow connections
+  A1 --> C4
 
-
-subgraph "User"
-    L[Web Traffic] --> H;
-end
+  C4 --> C1
+  C4 --> C2
+  C4 --> C3
+  C4 --> C5
+```
 
 
 ### Workflow Steps:
@@ -56,7 +50,7 @@ end
 
 The project is organized into logical Terraform files for maintainability.
 
-
+```
 .
 ├── main.tf                 # Main Terraform config, provider, and locals
 ├── variables.tf            # All input variables for the project
@@ -71,7 +65,7 @@ The project is organized into logical Terraform files for maintainability.
 ├── outputs.tf              # Defines the stack outputs (e.g., website URL)
 └── test/
 └── codepipeline_test.go    # The Terratest infrastructure test suite
-
+```
 
 ---
 
